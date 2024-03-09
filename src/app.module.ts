@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { AttributesModule } from './attributes/attributes.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -16,7 +16,7 @@ import { AttributesModule } from './attributes/attributes.module';
       autoLoadEntities:true,
       synchronize: true
     }),
-    AttributesModule,
+    AuthModule
   ],
   controllers: [],
   providers: [],
