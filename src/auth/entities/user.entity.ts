@@ -1,5 +1,8 @@
 import { BeforeInsert, BeforeUpdate, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
+/* The above class defines a User entity with various properties such as id, email, backupEmail,
+password, fullName, isActive, roles, and includes functions to convert email to lowercase before
+insertion and update. */
 @Entity('users')
 export class User {
     
