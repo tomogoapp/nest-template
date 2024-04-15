@@ -1,2 +1,2 @@
-export { fileNamer } from "./fileNamer.helper"
+export { fileNamer,fileNameUUID } from "./fileNamer.helper"
 export { fileFilter } from "./fileFilter.helper"

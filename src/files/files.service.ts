@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common'
 import { existsSync } from 'fs'
 import { join } from 'path'
 import * as AWS from 'aws-sdk'
+import {fileNameUUID} from './helpers'
 
 @Injectable()
 export class FilesService {
@@ -49,16 +50,19 @@ export class FilesService {
  * operation, which includes information such as the location of the uploaded file in the S3 bucket.
  */
   async uploadFile(file: Express.Multer.File) {
+
+    const name = fileNameUUID(file)
+
     const uploadResult = await this.s3.upload({
       Bucket: process.env.MINIO_BUCKET, // Nombre de tu bucket
       Body: file.buffer,
-      Key: `${Date.now()}-${file.originalname}`
+      //Key: `${Date.now()}-${file.originalname}`
+      Key: name
 
     }).promise()
 
     return uploadResult
   }
-
 
 /**
  * This TypeScript function deletes a file from an AWS S3 bucket using the provided key.
