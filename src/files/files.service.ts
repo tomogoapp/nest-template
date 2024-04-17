@@ -39,8 +39,7 @@ export class FilesService {
     return path
 
   }
-
-
+  
 /**
  * The function `uploadFiles` asynchronously uploads multiple files to AWS S3 and returns an array of
  * upload data.

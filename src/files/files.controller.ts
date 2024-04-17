@@ -14,8 +14,6 @@ import {
 } from '@nestjs/common'
 import { FilesService } from './files.service'
 import { FileInterceptor,FilesInterceptor } from '@nestjs/platform-express'
-import { diskStorage } from 'multer'
-import { fileNamer,fileFilter } from './helpers/'
 import { Response } from 'express'
 import { ConfigService } from '@nestjs/config'
 
