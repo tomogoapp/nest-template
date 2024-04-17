@@ -40,19 +40,25 @@ export class FilesService {
 
   }
 
+
 /**
  * The function `uploadFiles` asynchronously uploads multiple files to AWS S3 and returns an array of
- * upload results.
- * @param {Express.Multer.File[]} files - The `files` parameter in the `uploadFiles` function is an
- * array of Express.Multer.File objects. These objects represent files uploaded via a form submission
- * using the Multer middleware in an Express.js application. Each `Express.Multer.File` object contains
- * information about an uploaded file, such
- * @returns An array of `AWS.S3.ManagedUpload.SendData` objects is being returned.
+ * upload data.
+ * @param {Express.Multer.File[] | undefined} files - The `files` parameter is an array of files of
+ * type `Express.Multer.File` or `undefined`.
+ * @returns An array of promises is being returned. Each promise represents the upload of a file to AWS
+ * S3.
  */
-  async uploadFiles(files: Express.Multer.File[]): Promise<AWS.S3.ManagedUpload.SendData[]> {
-    const uploadPromises = files.map(file => this.uploadFile(file));
-    return await Promise.all(uploadPromises);
+async uploadFiles(files: Express.Multer.File[] ): Promise<AWS.S3.ManagedUpload.SendData[]> {
+  if (!files || files.length === 0) {
+    // Puedes decidir lanzar un error o simplemente retornar un array vacío
+    throw new BadRequestException('No files provided');
+    // O retornar un array vacío si eso se ajusta mejor a tu flujo de trabajo
+    // return [];
   }
+  const uploadPromises = files.map(file => this.uploadFile(file));
+  return await Promise.all(uploadPromises);
+}
 
 /**
  * The function `uploadFile` asynchronously uploads a file to an S3 bucket using the AWS SDK.
