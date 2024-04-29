@@ -1,3 +1,4 @@
+import { BadRequestException } from "@nestjs/common"
 import { v4 as uuid } from "uuid"
 
 export const fileNamer = ( req: Express.Request, file: Express.Multer.File, callback: Function ) => {
@@ -14,7 +15,7 @@ export const fileNamer = ( req: Express.Request, file: Express.Multer.File, call
 
 export const fileNameUUID = ( file: Express.Multer.File) => {
 
-    if (!file) return( new Error('File is Empty'), false)
+    if (!file) return( new BadRequestException('File is Empty'), false)
 
     const fileExtension = file.mimetype.split('/')[1]
 

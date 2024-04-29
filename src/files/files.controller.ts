@@ -1,5 +1,6 @@
 import { 
   BadRequestException, 
+  Body, 
   Controller, 
   Delete, 
   Get, 
@@ -14,8 +15,6 @@ import {
 } from '@nestjs/common'
 import { FilesService } from './files.service'
 import { FileInterceptor,FilesInterceptor } from '@nestjs/platform-express'
-import { diskStorage } from 'multer'
-import { fileNamer,fileFilter } from './helpers/'
 import { Response } from 'express'
 import { ConfigService } from '@nestjs/config'
 
@@ -70,7 +69,7 @@ single file. Here's a breakdown of what the code is doing: */
           };
       } catch (error) {
         console.log(error)
-          throw new HttpException('Failedddd to upload file', HttpStatus.INTERNAL_SERVER_ERROR);
+          throw new BadRequestException('Failedddd to upload file');
       }
   }
 
@@ -93,7 +92,7 @@ multiple files. Here's a breakdown of what the code is doing: */
 
 /* The `@Delete('product/:filekey')` decorator in the NestJS controller is defining a DELETE endpoint
 for deleting a file based on a file key parameter. Here's a breakdown of what the code is doing: */
-  @Delete('product/:filekey')
+  @Delete('delete/:filekey')
 /**
  * This TypeScript function deletes a file using a file key parameter and handles errors by throwing an
  * HTTP exception if necessary.
@@ -104,13 +103,19 @@ for deleting a file based on a file key parameter. Here's a breakdown of what th
  * operation.
  */
   async deleteFile(
-    @Param('filekey') fileKey:string){
-      try {
-        const result = await this.filesService.deleteFile(fileKey)
-        return result
-      }catch(error){
-        throw new HttpException('Error deleting file', HttpStatus.INTERNAL_SERVER_ERROR)
-      }
+    @Param('filekey') fileKey:string
+  ){
+    try {
+      const result = await this.filesService.deleteFile(fileKey)
+      return result
+    }catch(error){
+      throw new HttpException('Error deleting file', HttpStatus.INTERNAL_SERVER_ERROR)
     }
+  }
   
+  @Delete('delete-multiple')
+  async deleteMultipleFiles(@Body() imagesArray: string[]){
+    return this.filesService.deleteMultipleFiles(imagesArray)
+  }
+
 }
