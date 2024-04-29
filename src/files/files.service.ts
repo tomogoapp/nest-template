@@ -84,6 +84,28 @@ async uploadFiles(files: Express.Multer.File[] ): Promise<AWS.S3.ManagedUpload.S
   }
 
 /**
+ * The function `deleteMultipleFiles` deletes multiple files specified in an array of image filenames.
+ * @param {string[]} imagesArray - The `imagesArray` parameter is an array of strings that contains the
+ * file names of the images that need to be deleted. The `deleteMultipleFiles` function is an
+ * asynchronous function that takes this array as input and deletes the corresponding files. If the
+ * `imagesArray` is empty or undefined, it
+ * @returns An object with a message property 'imaganes borradas' is being returned.
+ */
+  async deleteMultipleFiles(imagesArray:string[]): Promise<object>{
+    console.log('imagesArray =>',imagesArray)
+    if(imagesArray.length === 0){
+      throw new BadRequestException('No hay imagenes que borrar')
+    }else{
+
+      imagesArray.map(image => this.deleteFile(image))
+
+      return {
+        message: 'imaganes borradas'
+      }
+    }
+  }
+
+/**
  * This TypeScript function deletes a file from an AWS S3 bucket using the provided key.
  * @param {string} key - The `deleteFile` function you provided is an asynchronous function that
  * deletes a file from an S3 bucket using the AWS SDK. The `key` parameter in this function represents

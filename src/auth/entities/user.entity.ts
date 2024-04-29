@@ -1,8 +1,9 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Product } from "src/products/entities";
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 /* The above class defines a User entity with various properties such as id, email, backupEmail,
-password, fullName, isActive, roles, and includes functions to convert email to lowercase before
-insertion and update. */
+password, fullName, isActive, roles, and includes before insert and update hooks to convert email to
+lowercase. */
 @Entity('users')
 export class User {
     
@@ -37,6 +38,12 @@ export class User {
         default: ['user']
     })
     roles: string[]
+
+    @OneToMany(
+        () => Product,
+        ( product ) => product.user
+    )
+    product: Product
 
     @BeforeInsert()
     lowerCaseBeforeInsert(){
