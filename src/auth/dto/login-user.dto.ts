@@ -7,7 +7,6 @@ import {
     MinLength 
 } from "class-validator"
 
-/* The LoginUserDto class in TypeScript defines properties for email and password validation. */
 export class LoginUserDto {
 
     @IsString()

@@ -39,6 +39,25 @@ export class FilesService {
     return path
 
   }
+  
+/**
+ * The function `uploadFiles` asynchronously uploads multiple files to AWS S3 and returns an array of
+ * upload data.
+ * @param {Express.Multer.File[] | undefined} files - The `files` parameter is an array of files of
+ * type `Express.Multer.File` or `undefined`.
+ * @returns An array of promises is being returned. Each promise represents the upload of a file to AWS
+ * S3.
+ */
+async uploadFiles(files: Express.Multer.File[] ): Promise<AWS.S3.ManagedUpload.SendData[]> {
+  if (!files || files.length === 0) {
+    // Puedes decidir lanzar un error o simplemente retornar un array vacío
+    throw new BadRequestException('No files provided');
+    // O retornar un array vacío si eso se ajusta mejor a tu flujo de trabajo
+    // return [];
+  }
+  const uploadPromises = files.map(file => this.uploadFile(file));
+  return await Promise.all(uploadPromises);
+}
 
 /**
  * The function `uploadFile` asynchronously uploads a file to an S3 bucket using the AWS SDK.
@@ -65,6 +84,28 @@ export class FilesService {
   }
 
 /**
+ * The function `deleteMultipleFiles` deletes multiple files specified in an array of image filenames.
+ * @param {string[]} imagesArray - The `imagesArray` parameter is an array of strings that contains the
+ * file names of the images that need to be deleted. The `deleteMultipleFiles` function is an
+ * asynchronous function that takes this array as input and deletes the corresponding files. If the
+ * `imagesArray` is empty or undefined, it
+ * @returns An object with a message property 'imaganes borradas' is being returned.
+ */
+  async deleteMultipleFiles(imagesArray:string[]): Promise<object>{
+    console.log('imagesArray =>',imagesArray)
+    if(imagesArray.length === 0){
+      throw new BadRequestException('No hay imagenes que borrar')
+    }else{
+
+      imagesArray.map(image => this.deleteFile(image))
+
+      return {
+        message: 'imaganes borradas'
+      }
+    }
+  }
+
+/**
  * This TypeScript function deletes a file from an AWS S3 bucket using the provided key.
  * @param {string} key - The `deleteFile` function you provided is an asynchronous function that
  * deletes a file from an S3 bucket using the AWS SDK. The `key` parameter in this function represents
@@ -86,7 +127,7 @@ export class FilesService {
       const data = await this.s3.deleteObject(deleteParams).promise()
 
       return {
-        message: 'Arcxhivo Borrado',
+        message: 'Archivo Borrado',
         data:data
       }
 

@@ -7,9 +7,6 @@ import {
     MinLength 
 } from "class-validator"
 
-/* The `CreateUserDto` class in TypeScript defines properties for creating a user with email, backup
-email, password, and full name, with validation decorators for string, email, password strength, and
-full name length. */
 export class CreateUserDto {
 
     @IsString()

@@ -1,5 +1,6 @@
 import { 
   BadRequestException, 
+  Body, 
   Controller, 
   Delete, 
   Get, 
@@ -9,12 +10,11 @@ import {
   Post, 
   Res, 
   UploadedFile, 
+  UploadedFiles, 
   UseInterceptors 
 } from '@nestjs/common'
 import { FilesService } from './files.service'
-import { FileInterceptor } from '@nestjs/platform-express'
-import { diskStorage } from 'multer'
-import { fileNamer,fileFilter } from './helpers/'
+import { FileInterceptor,FilesInterceptor } from '@nestjs/platform-express'
 import { Response } from 'express'
 import { ConfigService } from '@nestjs/config'
 
@@ -44,35 +44,9 @@ export class FilesController {
     res.sendFile(path)
   }
 
-  // @Post('product')
-  // @UseInterceptors( FileInterceptor('file',{
-  //   fileFilter: fileFilter,
-  //   // limits: { fileSize: 10240 },
-  //   storage: diskStorage({
-  //     destination: './static/uploads',
-  //     filename: fileNamer
-  //   })
-  // }) )
-  // uploadPorductImage(
-  //   @UploadedFile() file:Express.Multer.File
-  // ){
-
-  //   if( !file ) {
-  //     throw new BadRequestException('File is empty')
-  //   }
-
-  //   const secureUrl = `${this.configService.get('HOST_API')}/files/product/${file.filename}`
-
-  //   return {
-  //     secureUrl
-  //   }
-  // }
-
-
-
-  @Post('product')
- /* The code snippet you provided is a method in a NestJS controller that handles file uploads. Let's
- break it down: */
+/* The code snippet you provided is defining a POST endpoint in a NestJS controller for uploading a
+single file. Here's a breakdown of what the code is doing: */
+  @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
 /**
  * The function `uploadFile` asynchronously uploads a file using the `filesService` and returns a
@@ -95,11 +69,30 @@ export class FilesController {
           };
       } catch (error) {
         console.log(error)
-          throw new HttpException('Failedddd to upload file', HttpStatus.INTERNAL_SERVER_ERROR);
+          throw new BadRequestException('Failedddd to upload file');
       }
   }
 
-  @Delete('product/:filekey')
+/* The code snippet you provided is defining a POST endpoint in a NestJS controller for uploading
+multiple files. Here's a breakdown of what the code is doing: */
+  @Post('multiple-upload')
+  @UseInterceptors(FilesInterceptor('files'))
+
+/**
+ * The function `uploadMultipleFiles` asynchronously uploads multiple files using Express Multer.
+ * @param {Express.Multer.File[]} files - The `files` parameter in the `uploadMultipleFiles` function
+ * is an array of files uploaded using the Multer middleware in an Express application. Each element in
+ * the array is of type `Express.Multer.File`, which represents a file uploaded via a form submission.
+ * @returns The `uploadMultipleFiles` function is returning the result of calling the `uploadFiles`
+ * method from the `filesService` with the `files` array as an argument.
+ */
+  async uploadMultipleFiles(@UploadedFiles() files: Express.Multer.File[]) {
+    return await this.filesService.uploadFiles(files);
+  }
+
+/* The `@Delete('product/:filekey')` decorator in the NestJS controller is defining a DELETE endpoint
+for deleting a file based on a file key parameter. Here's a breakdown of what the code is doing: */
+  @Delete('delete/:filekey')
 /**
  * This TypeScript function deletes a file using a file key parameter and handles errors by throwing an
  * HTTP exception if necessary.
@@ -110,13 +103,19 @@ export class FilesController {
  * operation.
  */
   async deleteFile(
-    @Param('filekey') fileKey:string){
-      try {
-        const result = await this.filesService.deleteFile(fileKey)
-        return result
-      }catch(error){
-        throw new HttpException('Error deleting file', HttpStatus.INTERNAL_SERVER_ERROR)
-      }
+    @Param('filekey') fileKey:string
+  ){
+    try {
+      const result = await this.filesService.deleteFile(fileKey)
+      return result
+    }catch(error){
+      throw new HttpException('Error deleting file', HttpStatus.INTERNAL_SERVER_ERROR)
     }
+  }
   
+  @Delete('delete-multiple')
+  async deleteMultipleFiles(@Body() imagesArray: string[]){
+    return this.filesService.deleteMultipleFiles(imagesArray)
+  }
+
 }
