@@ -68,7 +68,6 @@ single file. Here's a breakdown of what the code is doing: */
               data: uploadResult
           };
       } catch (error) {
-        console.log(error)
           throw new BadRequestException('Failedddd to upload file');
       }
   }
