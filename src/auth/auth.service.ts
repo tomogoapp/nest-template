@@ -97,8 +97,6 @@ export class AuthService {
       }
     })
 
-    console.log('user=>',user)
-
     if( !user ){
       throw new UnauthorizedException('User dont found')
     }

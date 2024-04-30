@@ -5,7 +5,7 @@ services:
     image: postgres:14.3
     restart: always
     ports:
-      - "5437:5432"
+      - ${DB_PORTS}
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
@@ -19,15 +19,15 @@ services:
     image: minio/minio
     container_name: ${MINIO_CONTAINER_NAME}
     ports:
-      - "9501:9000"  # Mapea el puerto 9501 del host al puerto 9000 del contenedor
-      - "9002:9002"  # Mapea el puerto 9002 del host al puerto 9002 del contenedor para la consola de administración
+      - ${MINIO_PORTS_DB}
+      - ${MINIO_PORTS_INTERFACE}
     volumes:
-      - "/mnt/data:/data"  # Monta el directorio /mnt/data del host en /data dentro del contenedor
+      - "/mnt/data:/data"
     environment:
-      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY}  # Establece el usuario root de MinIO
-      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY}  # Establece la contraseña del usuario root
-    command: server /data/${MINIO_BUCKET} --console-address ":9002"  # Ejecuta el servidor MinIO con la consola en el puerto 9001
-    restart: unless-stopped  # Política de reinicio
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY}
+    command: server /data/${MINIO_BUCKET} --console-address ":9001"
+    restart: unless-stopped
     networks:
       - ${NETWORK}
       
