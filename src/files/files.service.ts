@@ -92,7 +92,6 @@ async uploadFiles(files: Express.Multer.File[] ): Promise<AWS.S3.ManagedUpload.S
  * @returns An object with a message property 'imaganes borradas' is being returned.
  */
   async deleteMultipleFiles(imagesArray:string[]): Promise<object>{
-    console.log('imagesArray =>',imagesArray)
     if(imagesArray.length === 0){
       throw new BadRequestException('No hay imagenes que borrar')
     }else{

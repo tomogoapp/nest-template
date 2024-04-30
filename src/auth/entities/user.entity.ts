@@ -1,4 +1,3 @@
-import { Product } from "src/products/entities";
 import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 /* The above class defines a User entity with various properties such as id, email, backupEmail,
@@ -39,11 +38,11 @@ export class User {
     })
     roles: string[]
 
-    @OneToMany(
-        () => Product,
-        ( product ) => product.user
-    )
-    product: Product
+    // @OneToMany(
+    //     () => Product,
+    //     ( product ) => product.user
+    // )
+    // product: Product
 
     @BeforeInsert()
     lowerCaseBeforeInsert(){
